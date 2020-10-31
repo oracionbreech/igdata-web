@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -14,6 +14,8 @@ import FirstPageIcon from '@material-ui/icons/FirstPage';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
+import { getComments } from '../services/api';
+import { ListItem, ListItemText } from '@material-ui/core';
 
 const useStyles1 = makeStyles((theme) => ({
     root: {
@@ -26,7 +28,6 @@ function TablePaginationActions(props: { count: any; page: any; rowsPerPage: any
     const classes = useStyles1();
     const theme = useTheme();
     const { count, page, rowsPerPage, onChangePage } = props;
-
     const handleFirstPageButtonClick = (event: any) => {
         onChangePage(event, 0);
     };
@@ -80,26 +81,6 @@ TablePaginationActions.propTypes = {
     rowsPerPage: PropTypes.number.isRequired,
 };
 
-function createData(name: string, calories: number, fat: number) {
-    return { name, calories, fat };
-}
-
-const rows = [
-    createData('Cupcake', 305, 3.7),
-    createData('Donut', 452, 25.0),
-    createData('Eclair', 262, 16.0),
-    createData('Frozen yoghurt', 159, 6.0),
-    createData('Gingerbread', 356, 16.0),
-    createData('Honeycomb', 408, 3.2),
-    createData('Ice cream sandwich', 237, 9.0),
-    createData('Jelly Bean', 375, 0.0),
-    createData('KitKat', 518, 26.0),
-    createData('Lollipop', 392, 0.2),
-    createData('Marshmallow', 318, 0),
-    createData('Nougat', 360, 19.0),
-    createData('Oreo', 437, 18.0),
-].sort((a, b) => (a.calories < b.calories ? -1 : 1));
-
 const useStyles2 = makeStyles({
     table: {
         minWidth: 500,
@@ -109,10 +90,24 @@ const useStyles2 = makeStyles({
 export default function CustomPaginationActionsTable() {
     const classes = useStyles2();
     const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(5);
-
+    const [rowsPerPage, setRowsPerPage] = React.useState(20);
+    const [rows, setrows] = useState([{
+        user: '',
+        commentFindings: []
+    }]);
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+    useEffect(() => {
 
+        async function loadComments() {
+            const data = await getComments()
+
+            if (data.status === 200) {
+                setrows(data.data)
+            }
+        }
+        loadComments();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
     const handleChangePage = (event: any, newPage: React.SetStateAction<number>) => {
         setPage(newPage);
     };
@@ -121,7 +116,6 @@ export default function CustomPaginationActionsTable() {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
     };
-
     return (
         <TableContainer component={Paper}>
             <Table className={classes.table} aria-label="custom pagination table">
@@ -130,15 +124,16 @@ export default function CustomPaginationActionsTable() {
                         ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                         : rows
                     ).map((row) => (
-                        <TableRow key={row.name}>
+                        <TableRow key={row.user}>
                             <TableCell component="th" scope="row">
-                                {row.name}
+                                {row.user}
                             </TableCell>
-                            <TableCell style={{ width: 160 }} align="right">
-                                {row.calories}
-                            </TableCell>
-                            <TableCell style={{ width: 160 }} align="right">
-                                {row.fat}
+                            <TableCell style={{ width: 400 }} align="right">
+                                {row.commentFindings.map((cF: any) => {
+                                    return (<ListItem key={cF.comment}>
+                                        <ListItemText secondary={cF.comment} />
+                                    </ListItem>)
+                                })}
                             </TableCell>
                         </TableRow>
                     ))}

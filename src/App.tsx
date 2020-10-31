@@ -1,11 +1,11 @@
 import React from 'react';
 import './App.css';
-import Comments from './components/comments';
+import Upload from './components/upload';
 
 function App() {
   return (
     <div className="App">
-      <Comments />
+      <Upload />
     </div>
   );
 }
