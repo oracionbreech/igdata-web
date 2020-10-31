@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
-import Comment from './list-item';
+import Comment from './comment';
 import { getComments } from '../services/api';
 
 const useStyles = makeStyles((theme) => ({
@@ -16,7 +16,7 @@ export default function FolderList() {
     const classes = useStyles();
     const [comments, setcomments] = useState([{
         user: '',
-        comment: ''
+        commentFindings: []
     }])
     useEffect(() => {
 
@@ -32,7 +32,7 @@ export default function FolderList() {
     }, [])
     return (
         <List className={classes.root}>
-            {comments && comments.map(comment => <Comment user={comment.user} comment={comment.comment} />)}
+            {comments && comments.map(comment => <Comment user={comment.user} commentFindings={comment.commentFindings} key={comment.user} />)}
         </List>
     );
 }
