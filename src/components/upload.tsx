@@ -1,8 +1,9 @@
-import { Button, Container, TextField } from '@material-ui/core'
-import React, { useState } from 'react'
+import { Button, Container, FormControl, InputLabel, MenuItem, Select, TextField } from '@material-ui/core'
+import React, { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux';
 import axios from 'axios'
 import { useHistory } from 'react-router-dom'
+import { getUsers } from '../services/api';
 
 
 export default function Upload() {
@@ -10,9 +11,18 @@ export default function Upload() {
     const history = useHistory()
 
     const [user, setuser] = useState('');
-
+    const [users, setusers] = useState([])
     const [selectedFile, setselectedFile] = useState();
     const [name, setname] = useState('')
+
+    useEffect(() => {
+        async function loadUsers() {
+            const { data } = await getUsers();
+            setusers(data);
+        }
+        loadUsers()
+    }, [])
+
     function onFileChange(event: any) {
         setselectedFile(event.target.files[0])
         setname(event.target.files[0].name)
@@ -22,7 +32,6 @@ export default function Upload() {
         axios.post("http://localhost:5000/upload-file", filePayload, {
         }).then((res) => {
             if (res.status === 200) {
-
                 history.push('/comments')
             }
         })
@@ -43,19 +52,27 @@ export default function Upload() {
         {selectedFile && <h1>{name}</h1>}
     </div>)
 
-    const handleChange = (commentor: any) => setuser(commentor.target.value)
+    const renderMenuItems = ({ _id, user }) => (
+        <MenuItem value={_id} key={_id}>
+            {user}
+        </MenuItem>
+    )
 
-    const renderUserTextField = () => (
-        <Container>
-            <TextField id='standard-basic' label="Enter Commentors Name" onChange={handleChange} />
-        </Container>
-
+    const renderUserSelect = () => (
+        <FormControl>
+            <InputLabel>
+                Choose A User
+            </InputLabel>
+            <Select onChange={({ target }: any) => setuser(target.value)} style={{ width: '200px' }} label="Choose A User" title="Choose A User">
+                {users && users.map(renderMenuItems)}
+            </Select>
+        </FormControl>
     )
 
     return (
         <div>
             {user.length > 0 && renderUploadButton()}
-            {renderUserTextField()}
+            {renderUserSelect()}
             {selectedFile && <h1>{name}</h1>}
         </div>
     )

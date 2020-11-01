@@ -1,6 +1,7 @@
 import {combineReducers } from 'redux'
-import commentReducer from './comments.reducer'
-
+import comments from './comments.reducer'
+import users from './user.reducer'
 export default  combineReducers({
-    commentReducer,
+    comments,
+    users
 })

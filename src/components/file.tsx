@@ -3,21 +3,19 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
-import ImageIcon from '@material-ui/icons/Image';
-import { IComment } from '../interfaces/IComment';
+import FileCopy from '@material-ui/icons/FileCopy';
 
 
-export default function Comment({ user, commentFindings }: IComment) {
+export default function File({ filename, _id }: any) {
     return (
         <div>
-            <ListItem>
+            <ListItem key={_id}>
                 <ListItemAvatar>
                     <Avatar>
-                        <ImageIcon />
+                        <FileCopy />
                     </Avatar>
                 </ListItemAvatar>
-                <ListItemText primary={user} />
-                {commentFindings.map((cF: any) => (<span>{cF.comment}</span>))}
+                <ListItemText primary={filename} />
             </ListItem>
         </div>
     )

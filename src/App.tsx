@@ -7,15 +7,14 @@ import {
   Route,
   Link
 } from "react-router-dom";
-
 import { makeStyles } from "@material-ui/core/styles"
 import { createStore } from "redux";
 import { Provider } from "react-redux";
 import reducer from './reducers/index';
 import { AppBar, Container, IconButton, List, ListItem, ListItemText, Toolbar } from '@material-ui/core';
 import { Home } from '@material-ui/icons';
-import CustomPaginationActionsTable from './components/paginated-table';
 import Users from './components/users';
+import FilesList from './components/filelist';
 
 const store = createStore(reducer);
 const useStyles = makeStyles({
@@ -63,7 +62,7 @@ const Routes = () => {
             </ListItem>
             <ListItem button>
               <Link to="/comments" style={{ color: 'white', textDecoration: 'none' }}>
-                <ListItemText primary='Comments' />
+                <ListItemText primary='Files' />
               </Link>
             </ListItem>
           </List>
@@ -75,7 +74,7 @@ const Routes = () => {
             <Upload />
           </Route>
           <Route path="/comments">
-            <CustomPaginationActionsTable />
+            <FilesList />
           </Route>
           <Route path="/users">
             <Users />

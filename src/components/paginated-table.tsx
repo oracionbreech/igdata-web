@@ -14,8 +14,9 @@ import FirstPageIcon from '@material-ui/icons/FirstPage';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
-import { getComments } from '../services/api';
 import { Card, CardContent, ListItem, ListItemText } from '@material-ui/core';
+import { useHistory } from 'react-router-dom'
+import { getFiles } from '../services/api';
 
 const useStyles1 = makeStyles((theme) => ({
     root: {
@@ -88,6 +89,7 @@ const useStyles2 = makeStyles({
 });
 
 export default function CustomPaginationActionsTable() {
+    const history = useHistory();
     const classes = useStyles2();
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(20);
@@ -97,12 +99,15 @@ export default function CustomPaginationActionsTable() {
     }]);
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
     useEffect(() => {
+        const pathname = history.location.pathname
+        const userId = pathname.slice(10, 2000);
 
         async function loadComments() {
-            const data = await getComments()
+            const data = await getFiles('5f9e5f5d71ad435395aacd60');
 
             if (data.status === 200) {
-                setrows(data.data)
+                console.log(data);
+
             }
         }
         loadComments();
@@ -176,10 +181,9 @@ export default function CustomPaginationActionsTable() {
             </CardContent>
         </Card>
     )
-    console.log(rows);
 
 
     return <div>
-        {rows.length < 2 ? renderEmptiness() : renderTable()}
+        {/* {rows.length < 2 ? renderEmptiness() : renderTable()} */}
     </div>;
 }
