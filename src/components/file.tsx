@@ -7,12 +7,11 @@ import FileCopy from '@material-ui/icons/FileCopy';
 import { Button } from '@material-ui/core';
 import { useHistory } from 'react-router-dom'
 
-export default function File({ filename, _id }: any) {
+export default function File({ instagram, date, comment, _id }: any) {
     const history = useHistory();
 
     const handleClick = () => {
-
-        history.push(`/filescomments/${_id}`)
+        history.push(`/comments/${_id}`)
     }
 
     return (
@@ -24,7 +23,7 @@ export default function File({ filename, _id }: any) {
                             <FileCopy />
                         </Avatar>
                     </ListItemAvatar>
-                    <ListItemText primary={filename} />
+                    <ListItemText primary={comment} secondary={instagram} title={date} />
                 </ListItem>
             </Button>
         </div>

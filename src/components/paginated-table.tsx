@@ -106,7 +106,6 @@ export default function CustomPaginationActionsTable() {
             const data = await getFiles('5f9e5f5d71ad435395aacd60');
 
             if (data.status === 200) {
-                console.log(data);
 
             }
         }

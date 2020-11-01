@@ -14,7 +14,8 @@ import reducer from './reducers/index';
 import { AppBar, Container, IconButton, List, ListItem, ListItemText, Toolbar } from '@material-ui/core';
 import { Home } from '@material-ui/icons';
 import Users from './components/users';
-import FilesList from './components/filelist';
+import FilesList from './components/comments-list';
+import FileComments from './components/filecomments';
 
 const store = createStore(reducer);
 const useStyles = makeStyles({
@@ -78,6 +79,9 @@ const Routes = () => {
           </Route>
           <Route path="/users">
             <Users />
+          </Route>
+          <Route path="/comments">
+            <FileComments />
           </Route>
         </Switch>
       </Container>
