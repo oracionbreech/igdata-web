@@ -19,7 +19,7 @@ export default function Users() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
     const renderUsersList = ({ user, _id }) => (<ListItem key={_id}>
-        <Button variant="outlined" onClick={() => history.push('/comments/' + _id)}>
+        <Button variant="outlined" onClick={() => history.push('/files/' + _id)}>
             <ListItemText>
                 {user}
             </ListItemText>

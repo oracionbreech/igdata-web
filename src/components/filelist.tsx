@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import File from './file';
 import { getFiles } from '../services/api';
-import { useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -19,7 +19,9 @@ export default function FilesList() {
     const [files, setfiles] = useState([])
     useEffect(() => {
         const pathname = history.location.pathname
-        const userId = pathname.slice(10, 2000);
+        const userId = pathname.slice(7, 2000);
+        console.log(userId);
+
         async function loadFiles() {
             const data = await getFiles(userId);
 
@@ -37,6 +39,8 @@ export default function FilesList() {
     const renderFileList = () => <List className={classes.root}>
         {files && files.map((file, key) => <File {...file}{...key} />)}
     </List>
+
+    // const renderFileComments = () => ()
 
     return (
         <>

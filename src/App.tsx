@@ -61,7 +61,7 @@ const Routes = () => {
               </Link>
             </ListItem>
             <ListItem button>
-              <Link to="/comments" style={{ color: 'white', textDecoration: 'none' }}>
+              <Link to="/files" style={{ color: 'white', textDecoration: 'none' }}>
                 <ListItemText primary='Files' />
               </Link>
             </ListItem>
@@ -73,7 +73,7 @@ const Routes = () => {
           <Route path="/upload">
             <Upload />
           </Route>
-          <Route path="/comments">
+          <Route path="/files">
             <FilesList />
           </Route>
           <Route path="/users">
