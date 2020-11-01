@@ -15,7 +15,7 @@ import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
 import { getComments } from '../services/api';
-import { ListItem, ListItemText } from '@material-ui/core';
+import { Card, CardContent, ListItem, ListItemText } from '@material-ui/core';
 
 const useStyles1 = makeStyles((theme) => ({
     root: {
@@ -116,53 +116,70 @@ export default function CustomPaginationActionsTable() {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
     };
-    return (
-        <TableContainer component={Paper}>
-            <Table className={classes.table} aria-label="custom pagination table">
-                <TableBody>
-                    {(rowsPerPage > 0
-                        ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                        : rows
-                    ).map((row) => (
-                        <TableRow key={row.user}>
-                            <TableCell component="th" scope="row">
-                                {row.user}
-                            </TableCell>
-                            <TableCell style={{ width: 400 }} align="right">
-                                {row.commentFindings.map((cF: any) => {
-                                    return (<ListItem key={cF.comment}>
-                                        <ListItemText secondary={cF.comment} />
-                                    </ListItem>)
-                                })}
-                            </TableCell>
-                        </TableRow>
-                    ))}
 
-                    {emptyRows > 0 && (
-                        <TableRow style={{ height: 53 * emptyRows }}>
-                            <TableCell colSpan={6} />
-                        </TableRow>
-                    )}
-                </TableBody>
-                <TableFooter>
-                    <TableRow>
-                        <TablePagination
-                            rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
-                            colSpan={3}
-                            count={rows.length}
-                            rowsPerPage={rowsPerPage}
-                            page={page}
-                            SelectProps={{
-                                inputProps: { 'aria-label': 'rows per page' },
-                                native: true,
-                            }}
-                            onChangePage={handleChangePage}
-                            onChangeRowsPerPage={handleChangeRowsPerPage}
-                            ActionsComponent={TablePaginationActions}
-                        />
+    const renderTable = () => (<TableContainer component={Paper}>
+        <Table className={classes.table} aria-label="custom pagination table">
+            <TableBody>
+                {(rowsPerPage > 0
+                    ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    : rows
+                ).map((row) => (
+                    <TableRow key={row.user}>
+                        <TableCell component="th" scope="row">
+                            {row.user}
+                        </TableCell>
+                        <TableCell style={{ width: 400 }} align="right">
+                            {row.commentFindings.map((cF: any) => {
+                                return (<ListItem key={cF.comment}>
+                                    <ListItemText secondary={cF.comment} />
+                                </ListItem>)
+                            })}
+                        </TableCell>
                     </TableRow>
-                </TableFooter>
-            </Table>
-        </TableContainer>
-    );
+                ))}
+
+                {emptyRows > 0 && (
+                    <TableRow style={{ height: 53 * emptyRows }}>
+                        <TableCell colSpan={6} />
+                    </TableRow>
+                )}
+            </TableBody>
+            <TableFooter>
+                <TableRow>
+                    <TablePagination
+                        rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
+                        colSpan={3}
+                        count={rows.length}
+                        rowsPerPage={rowsPerPage}
+                        page={page}
+                        SelectProps={{
+                            inputProps: { 'aria-label': 'rows per page' },
+                            native: true,
+                        }}
+                        onChangePage={handleChangePage}
+                        onChangeRowsPerPage={handleChangeRowsPerPage}
+                        ActionsComponent={TablePaginationActions}
+                    />
+                </TableRow>
+            </TableFooter>
+        </Table>
+    </TableContainer>)
+
+    const emptinessProps = () => ({
+        variant: 'elevated'
+    })
+
+    const renderEmptiness = () => (
+        <Card {...emptinessProps}>
+            <CardContent>
+                <h1>No Comments Loaded</h1>
+            </CardContent>
+        </Card>
+    )
+    console.log(rows);
+
+
+    return <div>
+        {rows.length < 2 ? renderEmptiness() : renderTable()}
+    </div>;
 }
