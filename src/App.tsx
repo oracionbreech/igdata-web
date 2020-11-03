@@ -69,7 +69,7 @@ const Routes = () => {
           </List>
         </Toolbar>
       </AppBar>
-      <Container maxWidth="sm" style={{ marginTop: '100px' }}>
+      <Container style={{ marginTop: '100px' }}>
         <Switch>
           <Route path="/upload">
             <Upload />

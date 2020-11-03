@@ -1,20 +1,24 @@
-import { Button, Container, FormControl, InputLabel, MenuItem, Select, TextField } from '@material-ui/core'
+import { Button, FormControl, InputLabel, MenuItem, Select, Snackbar, } from '@material-ui/core'
 import React, { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux';
 import axios from 'axios'
 import { useHistory } from 'react-router-dom'
 import { getUsers } from '../services/api';
+import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
 
+function Alert(props: AlertProps) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 export default function Upload() {
-    const dispatch = useDispatch()
     const history = useHistory()
 
     const [user, setuser] = useState('');
     const [users, setusers] = useState([])
     const [selectedFile, setselectedFile] = useState();
     const [name, setname] = useState('')
-
+    const [snackbarOpenError, setsnackbarOpenError] = useState(false)
+    const [snackbarOpenSuccess, setsnackbarOpenSuccess] = useState(false)
     useEffect(() => {
         async function loadUsers() {
             const { data } = await getUsers();
@@ -31,9 +35,14 @@ export default function Upload() {
         filePayload.append('commentor', user)
         axios.post("http://localhost:5000/upload-file", filePayload, {
         }).then((res) => {
+            setsnackbarOpenSuccess(true)
             if (res.status === 200) {
-                history.push('/comments')
+                console.log(res);
+                history.push('/users')
             }
+        }).catch(err => {
+            setsnackbarOpenError(true)
+            console.log(err);
         })
     }
 
@@ -69,8 +78,40 @@ export default function Upload() {
         </FormControl>
     )
 
+    const handleSnackBarCloseError = (event?: React.SyntheticEvent, reason?: string) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setsnackbarOpenError(false);
+    };
+
+
+    const handleSnackBarCloseSuccess = (event?: React.SyntheticEvent, reason?: string) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setsnackbarOpenSuccess(false);
+    };
+
+
+    const renderSnackBar = () => (<Snackbar open={snackbarOpenError} autoHideDuration={10000} onClose={handleSnackBarCloseError}>
+        <Alert onClose={handleSnackBarCloseError} severity="error">
+            Error Uploading Might be and invalid file or the comments in file are already stored in the db
+        </Alert>
+    </Snackbar>)
+
+
+    const renderSnackBarSuccess = () => (<Snackbar open={snackbarOpenError} autoHideDuration={10000} onClose={handleSnackBarCloseSuccess}>
+        <Alert onClose={handleSnackBarCloseSuccess} severity="success">
+            File Uploaded See User Tab
+    </Alert>
+    </Snackbar>)
+
+
     return (
         <div>
+            {renderSnackBarSuccess()}
+            {renderSnackBar()}
             {user.length > 0 && renderUploadButton()}
             {renderUserSelect()}
             {selectedFile && <h1>{name}</h1>}
