@@ -5,6 +5,7 @@ import axios from 'axios'
 import { useHistory } from 'react-router-dom'
 import { getUsers } from '../services/api';
 import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
+import { apiUri } from '../constants';
 
 function Alert(props: AlertProps) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -33,7 +34,7 @@ export default function Upload() {
         const filePayload = new FormData();
         filePayload.append('file', event.target.files[0])
         filePayload.append('commentor', user)
-        axios.post("http://localhost:5000/upload-file", filePayload, {
+        axios.post(`${apiUri}/upload-file`, filePayload, {
         }).then((res) => {
             setsnackbarOpenSuccess(true)
             if (res.status === 200) {
