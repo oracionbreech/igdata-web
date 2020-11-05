@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux';
 import axios from 'axios'
 import { useHistory } from 'react-router-dom'
-import { getUsers } from '../services/api';
+import { getUsers, readJsonFromLocal } from '../services/api';
 import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
 import { apiUri } from '../constants';
 
@@ -38,12 +38,10 @@ export default function Upload() {
         }).then((res) => {
             setsnackbarOpenSuccess(true)
             if (res.status === 200) {
-                console.log(res);
                 history.push('/users')
             }
         }).catch(err => {
             setsnackbarOpenError(true)
-            console.log(err);
         })
     }
 

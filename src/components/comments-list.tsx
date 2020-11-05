@@ -154,7 +154,6 @@ export default function FilesList() {
         }, 0)
 
         const totalValid = (commentsCount - duplicatesCountSpread) + duplicatesCount;
-        console.log(totalValid);
 
 
 

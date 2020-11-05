@@ -1,1 +1,1 @@
-export const apiUri = "https://64937438f9a6.ngrok.io";
+export const apiUri = "https://evening-shelf-86686.herokuapp.com";
