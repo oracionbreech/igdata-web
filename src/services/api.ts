@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { apiUri } from '../constants';
+import IAuditor from '../interfaces/IAuditor';
 
 export const getComments = async (commentor: string) => {
     const comment = await axios.get(`${apiUri}/get-comments?commentor=${commentor}`)
@@ -21,8 +22,11 @@ export const getFileComments = async (fileId: string) => {
     return users;
 }
 
-export const readJsonFromLocal = async (localUri: string) => {
-    const users = await axios.get('file:///home/breech/Downloads/OCT%2026%202020-20201101T144601Z-001/OCT%2026%202020/commentsJSON/comments.json')
-    return users;
+export const createAuditor = async () => {
+    return "s";
 }
 
+export const loginAuditor = async ({email, password}: IAuditor) => {
+    const auditor = await axios.post(`${apiUri}/login-auditor`, {email, password})
+    return auditor;
+}

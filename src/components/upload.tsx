@@ -1,11 +1,10 @@
 import { Button, FormControl, InputLabel, MenuItem, Select, Snackbar, } from '@material-ui/core'
 import React, { useState, useEffect } from 'react'
-import { useDispatch } from 'react-redux';
 import axios from 'axios'
 import { useHistory } from 'react-router-dom'
-import { getUsers, readJsonFromLocal } from '../services/api';
 import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
 import { apiUri } from '../constants';
+import { getUsers } from '../services/api';
 
 function Alert(props: AlertProps) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
