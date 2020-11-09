@@ -14,7 +14,6 @@ function Alert(props: AlertProps) {
 
 export default function Login() {
     const history = useHistory()
-    const dispatch = useDispatch();
     const [loginForm, setloginForm]: any = useState();
     const [snackbarOpenError, setsnackbarOpenError] = useState(false)
     const onFormFieldChange = async (e: any) => {
@@ -29,7 +28,7 @@ export default function Login() {
             const auditor = await loginAuditor(loginForm);
             if (auditor.status === 200) {
                 const { email, password } = auditor.data;
-                dispatch(authenticate({ email, password }))
+                localStorage.setItem('email', email);
                 history.push('/users')
             } else {
                 setsnackbarOpenError(true)

@@ -12,7 +12,6 @@ function Alert(props: AlertProps) {
 
 export default function Upload() {
     const history = useHistory()
-
     const [user, setuser] = useState('');
     const [users, setusers] = useState([])
     const [selectedFile, setselectedFile] = useState();
@@ -59,9 +58,9 @@ export default function Upload() {
         {selectedFile && <h1>{name}</h1>}
     </div>)
 
-    const renderMenuItems = ({ _id, user }) => (
+    const renderMenuItems = ({ _id, name }) => (
         <MenuItem value={_id} key={_id}>
-            {user}
+            {name}
         </MenuItem>
     )
 

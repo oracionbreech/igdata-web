@@ -19,6 +19,7 @@ import FileComments from './components/filecomments';
 import Login from './components/login';
 import Auditors from './components/auditors';
 import { useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 
 const store = createStore(reducer);
 const useStyles = makeStyles({
@@ -44,11 +45,12 @@ function App() {
   );
 }
 
+
 const Routes = () => {
   const app = useSelector((state: any) => state)
-  const { email, password } = app.auth;
-
   const classes = useStyles();
+  const email = localStorage.getItem('email');
+  const history = useHistory();
   return <Router>
     <div>
       <AppBar>
@@ -57,7 +59,7 @@ const Routes = () => {
             <Home fontSize="large" />
           </IconButton>
           <List component="nav" aria-labelledby="main navigation" className={classes.navDisplayFlex}>
-            {email.length > 0 && password.length > 0 && (<><ListItem button>
+            {email && email !== undefined && email !== null && email.length > 0 && <><ListItem button>
               <Link to="/upload" style={{ color: 'white', textDecoration: 'none' }}>
                 <ListItemText primary='Upload' />
               </Link>
@@ -66,12 +68,20 @@ const Routes = () => {
                 <Link to="/users" style={{ color: 'white', textDecoration: 'none' }}>
                   <ListItemText primary='Users' />
                 </Link>
-              </ListItem></>)}
-            <ListItem button>
-              <Link to="/login" style={{ color: 'white', textDecoration: 'none' }}>
-                <ListItemText primary='Home' />
+              </ListItem></>}
+
+            {email && email !== undefined && email !== null && email.length > 0 ? <ListItem button>
+              <Link to="/logout" style={{ color: 'white', textDecoration: 'none' }} onClick={() => {
+                localStorage.clear();
+                window.location.href = (window.location.origin);
+              }}>
+                <ListItemText primary='Logout' />
               </Link>
-            </ListItem>
+            </ListItem> : <ListItem button>
+                <Link to="/login" style={{ color: 'white', textDecoration: 'none' }}>
+                  <ListItemText primary='Login' />
+                </Link>
+              </ListItem>}
           </List>
         </Toolbar>
       </AppBar>
@@ -97,7 +107,6 @@ const Routes = () => {
           </Route>
         </Switch>
       </Container>
-
     </div>
   </Router>
 }
