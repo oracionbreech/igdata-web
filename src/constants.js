@@ -2,7 +2,7 @@
 const DEV = "DEV";
 const PROD = "PROD";
 
-const CURRENTENV = DEV;
+const CURRENTENV = PROD;
 
 const herokuProdUrl = "https://evening-shelf-86686.herokuapp.com";
 const localDevUrl = "http://localhost:5000";
