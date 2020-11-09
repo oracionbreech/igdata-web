@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { getComments } from '../services/api';
+import { deleteUser, getComments, getUser } from '../services/api';
 import { useHistory } from 'react-router-dom';
 import _ from 'lodash'
 import moment from 'moment'
-import { Accordion, AccordionDetails, AccordionSummary, Collapse, Grid, ListItemIcon, Typography, } from '@material-ui/core';
+import { Accordion, AccordionDetails, AccordionSummary, Button, Collapse, Grid, ListItemIcon, Typography, } from '@material-ui/core';
 import { DoubleArrow, ExpandLess, ExpandMore, ExpandMoreOutlined } from '@material-ui/icons';
 import { DateRangePicker } from "materialui-daterange-picker";
 
@@ -16,6 +16,12 @@ import Avatar from '@material-ui/core/Avatar';
 import ImageIcon from '@material-ui/icons/Image';
 import WorkIcon from '@material-ui/icons/Work';
 import BeachAccessIcon from '@material-ui/icons/BeachAccess';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -33,22 +39,22 @@ export default function FilesList() {
     const history = useHistory()
     const [files, setfiles] = useState([])
     const [commentsCount, setcommentsCount] = useState(0);
-    const [open, setOpen] = React.useState(true);
+    const [open, setOpen] = useState(true);
+    const [dialogOpen, setdialogOpen] = useState(false);
     const [dateRange, setDateRange]: any = React.useState();
     const [duplicates, setduplicates]: Array<any> = useState([])
     const [duplicatesOpen, setduplicatesOpen] = useState(false)
+    const [employeeName, setemployeeName] = useState('')
+    const pathname = history.location.pathname
+    const userId = pathname.slice(7, 2000);
     useEffect(() => {
-
-        const pathname = history.location.pathname
-        const userId = pathname.slice(7, 2000);
-
         async function loadFiles() {
             const data = await getComments(userId);
-
-            if (data.status === 200) {
-
+            const username = await getUser(userId);
+            if (data.status === 200 && username.status === 200) {
+                const { name } = username.data;
                 const { comments } = data.data;
-
+                setemployeeName(name)
                 const mutatedComments = comments.map((mutatedComment: any) => ({
                     ...mutatedComment,
                     date: moment(mutatedComment.date).format('MMMM DD YYYY')
@@ -155,11 +161,8 @@ export default function FilesList() {
 
         const totalValid = (commentsCount - duplicatesCountSpread) + duplicatesCount;
 
-
-
-
         return <List>
-            <Typography>Reports for Selected Period</Typography>
+            <Typography>Reports for Selected Period for {employeeName}</Typography>
             <ListItem>
                 <ListItemAvatar>
                     <Avatar>
@@ -201,23 +204,74 @@ export default function FilesList() {
         </List>
     }
 
-    return (
-        <div className={classes.root}>
-            <Grid container spacing={3}>
-                <Grid item xs>
-                    <DateRangePicker
-                        open={open}
-                        toggle={toggle}
-                        onChange={(range) => setDateRange(range)}
-                    />
-                </Grid>
-                <Grid item xs>
-                    {reports()}
-                    {files.length < 1 && renderEmptiness()}
-                    {files && files.map(file => (renderAccordion(file)))}
-                </Grid>
-            </Grid>
+    const onDeleteUser = async () => {
+        const user = await deleteUser(userId);
+        if (user.status === 200) {
+            history.push('/users')
+        }
+    }
 
+    const renderDeleteButton = () => {
+        return <div style={{ marginTop: '20px' }} onClick={() => {
+            setdialogOpen(true)
+        }}><Button color="secondary" variant="contained">Delete User</Button></div>
+    }
+
+    const closeConfirmationDialog = () => {
+        setdialogOpen(false)
+    }
+
+    const ConfirmationDialog = () => {
+        return <div>
+            <Dialog
+                open={dialogOpen}
+                onClose={closeConfirmationDialog}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">{"Delete An Employee"}</DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        Deleting an employee may indicate removal or termination of service. Please make sure you are certain this you have no business needing this employee's data
+          </DialogContentText>
+                    <DialogContentText id="alert-dialog-description">
+                        Are you sure you want to remove {employeeName} ?
+                        </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={closeConfirmationDialog} color="primary">
+                        Cancel
+          </Button>
+                    <Button onClick={onDeleteUser} color="primary" autoFocus>
+                        Proceed and Delete {employeeName} Associated Data
+          </Button>
+                </DialogActions>
+            </Dialog>
+        </div>
+    }
+
+    return (
+
+        <div>
+            <div className={classes.root}>
+
+                <Grid container spacing={3}>
+                    <Grid item xs>
+                        <DateRangePicker
+                            open={open}
+                            toggle={toggle}
+                            onChange={(range) => setDateRange(range)}
+                        />
+                    </Grid>
+                    <Grid item xs>
+                        {reports()}
+                        {files.length < 1 && renderEmptiness()}
+                        {files && files.map(file => (renderAccordion(file)))}
+                    </Grid>
+                </Grid>
+            </div>
+            {renderDeleteButton()}
+            <ConfirmationDialog />
         </div>
     );
 }

@@ -7,6 +7,11 @@ export const getComments = async (commentor: string) => {
     return comment;
 }
 
+export const getUser = async (userId: string) => {
+    const user = await axios.get(`${apiUri}/get-user/${userId}`)
+    return user;
+}
+
 export const getUsers = async () => {
     const users = await axios.get(`${apiUri}/get-users`)
     return users;
@@ -30,4 +35,9 @@ export const createUser = async (name: string) => {
 export const loginAuditor = async ({email, password}: IAuditor) => {
     const auditor = await axios.post(`${apiUri}/login-auditor`, {email, password})
     return auditor;
+}
+
+export const deleteUser = async (userId: string) => {
+    const user = await axios.delete(`${apiUri}/delete-user/${userId}`, )
+    return user;
 }

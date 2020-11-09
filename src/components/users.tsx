@@ -21,7 +21,7 @@ export default function Users() {
         }
         loadUsers()
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, [aUser])
 
     const onNameChange = (e: any) => {
         setname(e.target.value)
@@ -29,13 +29,15 @@ export default function Users() {
 
     const addUser = async () => {
         const user = await createUser(name);
-
+        if (user.status === 200) {
+            setaUser(user.data)
+        }
     }
 
-    const renderUsersList = ({ user, _id }) => (<ListItem key={_id}>
+    const renderUsersList = ({ name, _id }) => (<ListItem key={_id}>
         <Button variant="outlined" onClick={() => history.push('/files/' + _id)}>
             <ListItemText>
-                {user}
+                {name}
             </ListItemText>
         </Button>
     </ListItem>)
@@ -43,16 +45,16 @@ export default function Users() {
     return (
         <div>
             <Container>
-                <Grid container>
+                <Grid container style={{ height: '100vh' }}>
                     <Grid item xs={6}>
                         <List>
                             {users && users.map(renderUsersList)}
                         </List>
                     </Grid>
-                    <Grid item xs={6} alignItems="center">
+                    <Grid item xs={6}>
                         <Typography>Add User</Typography>
                         <TextField label="Employee Name" type="name" onChange={onNameChange} name="name" />
-                        {name.length > 0 && <Button color="secondary" variant="contained">Login</Button>}
+                        {name.length > 0 && <Button color="secondary" onClick={addUser} variant="contained">Add User</Button>}
                     </Grid>
                 </Grid>
             </Container>
