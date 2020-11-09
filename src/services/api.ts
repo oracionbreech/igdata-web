@@ -22,8 +22,9 @@ export const getFileComments = async (fileId: string) => {
     return users;
 }
 
-export const createAuditor = async () => {
-    return "s";
+export const createUser = async (name: string) => {
+    const user = await axios.post(`${apiUri}/create-user`, {name: name});
+    return user;
 }
 
 export const loginAuditor = async ({email, password}: IAuditor) => {
