@@ -4,7 +4,8 @@ const PROD = "PROD";
 
 const CURRENTENV = PROD;
 
-const herokuProdUrl = "https://evening-shelf-86686.herokuapp.com";
+const herokuProdUrl =
+  "http://ec2-13-250-102-178.ap-southeast-1.compute.amazonaws.com/";
 const localDevUrl = "http://localhost:5000";
 
 export const apiUri = CURRENTENV === DEV ? localDevUrl : herokuProdUrl;
