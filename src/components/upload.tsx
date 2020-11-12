@@ -1,10 +1,12 @@
-import { Button, FormControl, InputLabel, MenuItem, Select, Snackbar, } from '@material-ui/core'
+import { Box, Button, FormControl, InputLabel, MenuItem, Select, Snackbar, Typography } from '@material-ui/core'
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { useHistory } from 'react-router-dom'
 import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
 import { apiUri } from '../constants';
 import { getUsers } from '../services/api';
+import LinearProgress from '@material-ui/core/LinearProgress/LinearProgress';
 
 function Alert(props: AlertProps) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -18,6 +20,7 @@ export default function Upload() {
     const [name, setname] = useState('')
     const [snackbarOpenError, setsnackbarOpenError] = useState(false)
     const [snackbarOpenSuccess, setsnackbarOpenSuccess] = useState(false)
+    const [uploadProgress, setuploadProgress] = useState(0)
     useEffect(() => {
         async function loadUsers() {
             const { data } = await getUsers();
@@ -27,18 +30,27 @@ export default function Upload() {
     }, [])
 
     function onFileChange(event: any) {
+
+        const config = {
+            onUploadProgress: function (progressEvent) {
+                var percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+                setuploadProgress(percentCompleted);
+            }
+        }
+
         setselectedFile(event.target.files[0])
         setname(event.target.files[0].name)
         const filePayload = new FormData();
         filePayload.append('file', event.target.files[0])
         filePayload.append('commentor', user)
-        axios.post(`${apiUri}/upload-file`, filePayload, {
-        }).then((res) => {
-            setsnackbarOpenSuccess(true)
+        axios.post(`${apiUri}/upload-file`, filePayload, config).then((res) => {
+            setname('')
             if (res.status === 200) {
                 history.push('/users')
             }
         }).catch(err => {
+            console.log(err);
+            setname('')
             setsnackbarOpenError(true)
         })
     }
@@ -104,6 +116,25 @@ export default function Upload() {
     </Alert>
     </Snackbar>)
 
+    function LinearProgressWithLabel(props) {
+        return (
+            <Box display="flex" alignItems="center">
+                <Box width="100%" mr={1}>
+                    <LinearProgress variant="determinate" {...props} />
+                </Box>
+                <Box minWidth={35}>
+                    <Typography variant="body2" color="textSecondary">{props.value < 100 ? `${Math.round(
+                        props.value,
+                    )}%` : <CheckCircleIcon color="primary" />}</Typography>
+                </Box>
+                {props.value === 100 && 'Please Wait for Users Page Redirection'}
+            </Box>
+        );
+    }
+
+    const renderProgressCircle = () => <div>
+        <LinearProgressWithLabel value={uploadProgress} />
+    </div>
 
     return (
         <div>
@@ -112,6 +143,7 @@ export default function Upload() {
             {user.length > 0 && renderUploadButton()}
             {renderUserSelect()}
             {selectedFile && <h1>{name}</h1>}
+            {renderProgressCircle()}
         </div>
     )
 }
