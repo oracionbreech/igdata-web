@@ -127,7 +127,7 @@ export default function Upload() {
                         props.value,
                     )}%` : <CheckCircleIcon color="primary" />}</Typography>
                 </Box>
-                {props.value === 100 && 'Please Wait for Users Page Redirection'}
+                {props.value === 100 && 'Parsing Comments. Please Wait for Redirection to the Users Page'}
             </Box>
         );
     }

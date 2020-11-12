@@ -21,6 +21,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import CircularProgress from '@material-ui/core/CircularProgress/CircularProgress';
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -45,6 +46,7 @@ export default function FilesList() {
     const [duplicates, setduplicates]: Array<any> = useState([])
     const [duplicatesOpen, setduplicatesOpen] = useState(false)
     const [employeeName, setemployeeName] = useState('')
+    const [isGettingData, setisGettingData] = useState(true);
     const pathname = history.location.pathname
     const userId = pathname.slice(7, 2000);
     useEffect(() => {
@@ -52,6 +54,7 @@ export default function FilesList() {
             const data = await getComments(userId);
             const username = await getUser(userId);
             if (data.status === 200 && username.status === 200) {
+                setisGettingData(false);
                 const { name } = username.data;
                 const { comments } = data.data;
                 setemployeeName(name)
@@ -254,7 +257,6 @@ export default function FilesList() {
 
         <div>
             <div className={classes.root}>
-
                 <Grid container spacing={3}>
                     <Grid item xs>
                         <DateRangePicker
@@ -263,11 +265,11 @@ export default function FilesList() {
                             onChange={(range) => setDateRange(range)}
                         />
                     </Grid>
-                    <Grid item xs>
+                    {isGettingData ? <CircularProgress /> : <Grid item xs>
                         {reports()}
                         {files.length < 1 && renderEmptiness()}
                         {files && files.map(file => (renderAccordion(file)))}
-                    </Grid>
+                    </Grid>}
                 </Grid>
             </div>
             {renderDeleteButton()}
