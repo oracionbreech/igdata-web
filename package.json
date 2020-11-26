@@ -32,7 +32,7 @@
   },
   "scripts": {
     "clean": "rm -R build",
-    "start": "react-scripts start",
+    "start": "rm -rf tsconfig.json && react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",

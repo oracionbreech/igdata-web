@@ -1,15 +1,15 @@
 import { ADD_USERS } from "../action-types/user";
 
-const initialState = []
+const initialState = [] as any;
 
-export default function users(state = initialState, {type, users}) {
-    switch (type) {
-        case ADD_USERS:
-          return {
-              ...state,
-            users,
-          };
-        default:
-          return state;
-      }
+export default function users(state = initialState, { type, users }: any) {
+  switch (type) {
+    case ADD_USERS:
+      return {
+        ...state,
+        users,
+      };
+    default:
+      return state;
+  }
 }
