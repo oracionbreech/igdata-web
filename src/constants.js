@@ -4,7 +4,7 @@ const PROD = 'PROD';
 
 const CURRENTENV = PROD;
 
-const prodUrl = 'http://localhost:8080';
+const prodUrl = 'http://api.igdata.xyz';
 const localDevUrl = 'http://localhost:5000';
 
 export const apiUri = CURRENTENV === DEV ? localDevUrl : prodUrl;
